@@ -150,6 +150,7 @@ class ResponseCodes(Enum):
     SUCCESS = "1"
     PARAMETER_ERROR = "1001"
     ACCESS_TOKEN_ERROR = "2001"
+    REFRESH_TOKEN_ERRPR = "2002"
     DEVICE_OFFLINE = '3019'
 
 

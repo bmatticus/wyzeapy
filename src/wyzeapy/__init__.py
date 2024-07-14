@@ -21,6 +21,7 @@ from .services.switch_service import SwitchService, SwitchUsageService
 from .services.thermostat_service import ThermostatService
 from .services.wall_switch_service import WallSwitchService
 from .wyze_auth_lib import WyzeAuthLib, Token
+from .exceptions import AccessTokenError
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -82,10 +83,14 @@ class Wyzeapy:
             self._auth_lib = await WyzeAuthLib.create(
                 email, password, key_id, api_key, token, self.execute_token_callbacks
             )
+            token_expired = False
             if token:
                 # User token supplied, refresh on startup
-                await self._auth_lib.refresh()
-            else:
+                try:
+                    await self._auth_lib.refresh()
+                except AccessTokenError as e:
+                    token_expired = True
+            if not token or token_expired:
                 await self._auth_lib.get_token_with_username_password(
                     email, password, key_id, api_key
                 )

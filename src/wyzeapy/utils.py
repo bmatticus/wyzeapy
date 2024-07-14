@@ -79,6 +79,8 @@ def check_for_errors_standard(service, response_json: Dict[str, Any]) -> None:
         elif response_json['code'] == ResponseCodes.ACCESS_TOKEN_ERROR.value:
             service._auth_lib.token.expired = True
             raise AccessTokenError("Access Token expired, attempting to refresh")
+        elif response_json['code'] == ResponseCodes.REFRESH_TOKEN_ERRPR.value:
+            raise AccessTokenError("Refresh Token invalid, attempting to refresh")
         elif response_json['code'] == ResponseCodes.DEVICE_OFFLINE.value:
             return
         else:
