@@ -88,7 +88,7 @@ class Wyzeapy:
                 # User token supplied, refresh on startup
                 try:
                     await self._auth_lib.refresh()
-                except AccessTokenError as e:
+                except AccessTokenError:
                     token_expired = True
             if not token or token_expired:
                 await self._auth_lib.get_token_with_username_password(
