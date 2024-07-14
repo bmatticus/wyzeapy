@@ -9,7 +9,7 @@ from typing import Dict, Any, List, Optional
 
 from Crypto.Cipher import AES
 
-from .exceptions import ParameterError, AccessTokenError, UnknownApiError
+from .exceptions import ParameterError, AccessTokenError, RefreshTokenError, UnknownApiError
 from .types import ResponseCodes, PropertyIDs, Device, Event
 
 PADDING = bytes.fromhex("05")
@@ -81,9 +81,7 @@ def check_for_errors_standard(service, response_json: Dict[str, Any]) -> None:
                 service._auth_lib.token.expired = True
             raise AccessTokenError("Access Token expired, attempting to refresh")
         elif response_json['code'] == ResponseCodes.REFRESH_TOKEN_ERROR.value:
-            if hasattr(service, '_auth_lib'):
-                service._auth_lib.token.expired = True
-            raise AccessTokenError("Refresh Token invalid, attempting to refresh")
+            raise RefreshTokenError("Refresh Token invalid, attempting new login")
         elif response_json['code'] == ResponseCodes.DEVICE_OFFLINE.value:
             return
         else:

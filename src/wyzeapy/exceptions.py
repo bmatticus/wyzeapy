@@ -20,6 +20,9 @@ class ParameterError(Exception):
 class AccessTokenError(Exception):
     pass
 
+class RefreshTokenError(Exception):
+    pass
+
 
 class LoginError(Exception):
     pass
