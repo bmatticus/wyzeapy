@@ -89,6 +89,7 @@ class Wyzeapy:
                 try:
                     await self._auth_lib.refresh()
                 except RefreshTokenError:
+                    _LOGGER.debug("Refresh token error. Attempting new login...")
                     token_error = True
             if not token or token_error:
                 await self._auth_lib.get_token_with_username_password(

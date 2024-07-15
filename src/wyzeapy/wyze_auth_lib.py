@@ -216,6 +216,7 @@ class WyzeAuthLib:
                     try:
                         await self.refresh()
                     except RefreshTokenError:
+                        _LOGGER.debug("Refresh failed due to refresh token error. Attempting login...")
                         await self.get_token_with_username_password(
                             username=self._username,
                             password=self._password,
