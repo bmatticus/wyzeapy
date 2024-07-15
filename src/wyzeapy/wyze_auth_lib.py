@@ -119,10 +119,11 @@ class WyzeAuthLib:
         return self
 
     async def get_token_with_username_password(
-        self, username, password, key_id, api_key
+        self, username, password, key_id, api_key, password_hashed=False
     ) -> Token:
         self._username = username
-        self._password = create_password(password)
+        if not password_hashed:
+            self._password = create_password(password)
         self._key_id = key_id
         self._api_key = api_key
         login_payload = {"email": self._username, "password": self._password}
@@ -219,7 +220,8 @@ class WyzeAuthLib:
                             username=self._username,
                             password=self._password,
                             key_id=self._key_id,
-                            api_key=self._api_key
+                            api_key=self._api_key,
+                            password_hashed=True
                         )
 
     async def refresh(self) -> None:
