@@ -15,6 +15,7 @@ from .exceptions import (
     UnknownApiError,
     TwoFactorAuthenticationEnabled,
     AccessTokenError,
+    RefreshTokenError,
 )
 from .utils import create_password, check_for_errors_standard
 
@@ -211,7 +212,15 @@ class WyzeAuthLib:
             async with self.refresh_lock:
                 if self.should_refresh or self.token.expired:
                     _LOGGER.debug("Should refresh. Refreshing...")
-                    await self.refresh()
+                    try:
+                        await self.refresh()
+                    except RefreshTokenError:
+                        await self.get_token_with_username_password(
+                            username=self._username,
+                            password=self._password,
+                            key_id=self._key_id,
+                            api_key=self._api_key
+                        )
 
     async def refresh(self) -> None:
         payload = {
